@@ -12,7 +12,7 @@ import sys
 import json
 import hashlib
 import chromadb
-from chromadb.config import Settings
+
 from typing import List, Dict, Optional, Any
 from datetime import datetime
 
@@ -22,7 +22,7 @@ class ChromaManager:
     
     def __init__(
         self,
-        host: str = "chromadb",
+        host: str = "localhost",
         port: int = 8000,
         auth_token: str = None
     ):
@@ -39,16 +39,17 @@ class ChromaManager:
         self.auth_token = auth_token or os.getenv("CHROMA_AUTH_TOKEN")
         
         # Configurazione client
-        settings = Settings(
-            chroma_api_impl="rest",
-            chroma_server_host=host,
-            chroma_server_http_port=port
-        )
-        
         if self.auth_token:
-            settings.chroma_server_auth_credentials = self.auth_token
-            
-        self.client = chromadb.Client(settings)
+            self.client = chromadb.HttpClient(
+                host=host,
+                port=port,
+                headers={"Authorization": f"Bearer {self.auth_token}"}
+            )
+        else:
+            self.client = chromadb.HttpClient(
+                host=host,
+                port=port
+            )
     
     def create_or_get_collection(
         self,
