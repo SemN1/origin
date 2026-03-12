@@ -20,7 +20,7 @@ class OllamaClient:
     
     def __init__(
         self,
-        host: str = "http://ollama:11434",
+        host: str = "http://localhost:11434",
         model: str = None,
         temperature: float = 0.7
     ):
@@ -33,7 +33,7 @@ class OllamaClient:
             temperature: Creatività risposta (0.0-1.0)
         """
         self.host = host
-        self.model = model or os.getenv("OLLAMA_MODEL", "qwen2.5:14b")
+        self.model = model or os.getenv("OLLAMA_MODEL", "qwen2.5:7b")
         self.temperature = temperature
         
     def generate(
