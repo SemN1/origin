@@ -1,0 +1,141 @@
+/home/semn1/origin/auto_backup.sh: riga 2: cd: /home/semn1/agent-system: File o directory non esistente
+warning: Non è un repository Git. Usa --no-index per confrontare due percorsi al di fuori di un albero di lavoro
+uso: git diff --no-index [<opzioni>] <percorso> <percorso>
+
+Opzioni formato output diff
+    -p, --patch           genera patch
+    -s, --no-patch        non visualizzare l'output del diff
+    -u                    genera patch
+    -U, --unified[=<n>]   genera diff con <n> righe di contesto
+    -W, --[no-]function-context
+                          genera diff con <n> righe di contesto
+    --raw                 genera il diff in formato grezzo
+    --patch-with-raw      sinonimo di '-p --raw'
+    --patch-with-stat     sinonimo di '-p --stat'
+    --numstat             --stat leggibile da una macchina
+    --shortstat           emetti in output solo l'ultima riga di --stat
+    -X, --dirstat[=<parametro1,parametro2>...]
+                          emetti in output la distribuzione del numero di modifiche relativo a ogni sottodirectory
+    --cumulative          sinonimo di --dirstat=cumulative
+    --dirstat-by-file[=<parametro1,parametro2>...]
+                          sinonimo di --dirstat=files,parametro1,parametro2...
+    --check               avvisa se le modifiche introducono marcatori conflitto o errori spazi bianchi
+    --summary             riassunto conciso (ad es. elementi creati, ridenominati e modifiche modi)
+    --name-only           visualizza solo i nomi dei file modificati
+    --name-status         visualizza solo i nomi e lo stato dei file modificati
+    --stat[=<ampiezza>[,<ampiezza nome>[,<numero>]]]
+                          genera diffstat
+    --stat-width <ampiezza>
+                          genera il diffstat con un'ampiezza specificata
+    --stat-name-width <ampiezza>
+                          genera il diffstat con un'ampiezza nomi specificata
+    --stat-graph-width <ampiezza>
+                          genera il diffstat con un'ampiezza grafo specificata
+    --stat-count <numero> genera il diffstat con righe limitate
+    --[no-]compact-summary
+                          genera riassunto conciso nel diffstat
+    --binary              stampa in output un diff binario che può essere applicato
+    --[no-]full-index     visualizza i nomi oggetto pre e post immagine nelle righe "indice"
+    --[no-]color[=<quando>]
+                          visualizza diff colorato
+    --ws-error-highlight <tipo>
+                          evidenzia gli errori di spazi bianchi nelle righe 'contesto', 'vecchie' o 'nuove' nel diff
+    -z                    non rimuovere i nomi percorso e usare caratteri NUL come terminatori campo in --raw o --numstat
+    --[no-]abbrev[=<n>]   usa <n> cifre per mostrare i nomi oggetto
+    --src-prefix <prefisso>
+                          visualizza il prefisso sorgente specificato invece di "a/"
+    --dst-prefix <prefisso>
+                          visualizza il prefisso destinazione specificato invece di "b/"
+    --line-prefix <prefisso>
+                          anteponi un prefisso aggiuntivo ad ogni riga dell'output
+    --no-prefix           non visualizzare alcun prefisso sorgente o destinazione
+    --default-prefix      use default prefixes a/ and b/
+    --inter-hunk-context <n>
+                          visualizza il contesto tra gli hunk del diff fino al numero di righe specificato
+    --output-indicator-new <carattere>
+                          specifica il carattere che indica una nuova riga al posto di '+'
+    --output-indicator-old <carattere>
+                          specifica il carattere che indica una vecchia riga al posto di '-'
+    --output-indicator-context <carattere>
+                          specifica il carattere che indica un contesto al posto di ' '
+
+Opzioni rinominazione diff
+    -B, --break-rewrites[=<n>[/<m>]]
+                          spezza modifiche di riscrittura completa in coppie eliminazione/creazione
+    -M, --find-renames[=<n>]
+                          rileva le ridenominazioni
+    -D, --irreversible-delete
+                          ometti la preimmagine per le eliminazioni
+    -C, --find-copies[=<n>]
+                          rileva le copie
+    --[no-]find-copies-harder
+                          usa file non modificati come sorgente per trovare copie
+    --no-renames          disabilita rilevamento ridenominazione
+    --[no-]rename-empty   usa blob vuoti come sorgente ridenominazione
+    --[no-]follow         continua a elencare la cronologia di un file al di là delle ridenominazioni
+    -l <n>                impedisci il rilevamento ridenominazione/copia se il numero delle destinazioni ridenominazione/copia eccede il limite specificato
+
+Opzioni algoritmo diff
+    --minimal             produci il diff più piccolo possibile
+    -w, --ignore-all-space
+                          ignora gli spazi bianchi durante il confronto delle righe
+    -b, --ignore-space-change
+                          ignora le modifiche al numero degli spazi bianchi
+    --ignore-space-at-eol ignora modifiche agli spazi bianchi a fine riga
+    --ignore-cr-at-eol    ignora carattere ritorno a capo a fine riga
+    --ignore-blank-lines  ignora modifiche che riguardano solo righe vuote
+    -I, --[no-]ignore-matching-lines <espressione regolare>
+                          ignora le modifiche le cui righe corrispondono a <regex>
+    --[no-]indent-heuristic
+                          euristica per spostare i limiti degli hunk nel diff per una lettura agevole
+    --patience            genera il diff usando l'algoritmo "patience diff"
+    --histogram           genera il diff usando l'algoritmo "histogram diff"
+    --diff-algorithm <algoritmo>
+                          seleziona un algoritmo diff
+    --anchored <testo>    genera il diff usando l'algoritmo "anchored diff"
+    --word-diff[=<modalità>]
+                          visualizza il diff parola per parola usando <modalità> per delimitare le parole modificate
+    --word-diff-regex <espressione regolare>
+                          usa <espressione regolare> per decidere cosa costituisce una parola
+    --color-words[=<espressione regolare>]
+                          equivalente di --word-diff=color --word-diff-regex=<espressione regolare>
+    --[no-]color-moved[=<modalità>]
+                          le righe di codice spostate sono colorate in modo diverso
+    --[no-]color-moved-ws <modalità>
+                          modo in cui sono ignorati gli spazi bianchi in --color-moved
+
+Altre opzioni diff
+    --[no-]relative[=<prefisso>]
+                          se eseguito da una sottodirectory, escludi le modifiche esterne ad essa e visualizza i percorsi relativi
+    -a, --[no-]text       tratta tutti i file come se fossero di testo
+    -R                    scambia i due input, genera un diff al contrario
+    --[no-]exit-code      esci con codice 1 se ci sono differenze, con 0 altrimenti
+    --[no-]quiet          disabilita l'intero output del programma
+    --[no-]ext-diff       consenti l'esecuzione di un helper diff esterno
+    --[no-]textconv       esegui filtri di conversione in testo esterni quando si confrontano file binari
+    --ignore-submodules[=<quando>]
+                          ignora le modifiche ai sottomoduli durante la generazione del diff
+    --submodule[=<formato>]
+                          specifica come verranno visualizzate le differenze nei sottomoduli
+    --ita-invisible-in-index
+                          nascondi le voci 'git add -N' nell'indice
+    --ita-visible-in-index
+                          tratta le voci 'git add -N' come reali nell'indice
+    -S <stringa>          cerca differenze che modificano il numero di occorrenze della stringa specificata
+    -G <espressione regolare>
+                          cerca differenze che modificano il numero di occorrenze dell'espressione regolare specificata
+    --pickaxe-all         visualizza tutte le modifiche nel changeset con -S o -G
+    --pickaxe-regex       tratta la <stringa> nell'opzione -S come un'espressione regolare POSIX estesa
+    -O <file>             controlla l'ordine con cui i file appariranno nell'output
+    --rotate-to <path>    mostra prima la modifica nel percorso specificato
+    --skip-to <path>      salta l'output nel percorso specificato
+    --find-object <ID oggetto>
+                          cerca differenze che modificano il numero di occorrenze dell'oggetto specificato
+    --diff-filter [(A|C|D|M|R|T|U|X|B)...[*]]
+                          seleziona file in base al tipo diff
+    --output <file>       l'output in un file specifico
+
+fatal: .git non è un repository Git (né lo è alcuna delle directory genitrici)
+fatal: .git non è un repository Git (né lo è alcuna delle directory genitrici)
+fatal: .git non è un repository Git (né lo è alcuna delle directory genitrici)
+Backup completato - ven 13 mar 2026, 03:00:01, CET

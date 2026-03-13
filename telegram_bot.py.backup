@@ -39,26 +39,15 @@ def send(chat_id, text):
     except Exception as e:
         print(f"Errore invio messaggio: {e}")
 
-def query_db(sql, params=None, fetchone=False, fetchall=False):
+def query_db(sql):
     conn = psycopg2.connect(DB_CONN)
     cur = conn.cursor()
-    cur.execute(sql, params)
-    if fetchall:
-        rows = cur.fetchall()
-        cur.close()
-        conn.close()
-        return rows
-    elif fetchone:
-        row = cur.fetchone()
-        cur.close()
-        conn.close()
-        return row
-    else:
-        row = cur.fetchone()
-        cols = [d[0] for d in cur.description]
-        cur.close()
-        conn.close()
-        return dict(zip(cols, row)) if row else {}
+    cur.execute(sql)
+    row = cur.fetchone()
+    cols = [d[0] for d in cur.description]
+    cur.close()
+    conn.close()
+    return dict(zip(cols, row)) if row else {}
 
 def ask_claude(question: str) -> str:
     """Chiama Claude Haiku per rispondere a domande"""
@@ -92,42 +81,17 @@ def handle(command, args, user_id):
     now = datetime.now().strftime("%d/%m/%Y %H:%M")
 
     if command == "/status":
-        project_id = args[0] if args else None
-        if project_id:
-            # Dettaglio singolo progetto
-            rows = query_db("""
-                SELECT project_name, status, current_phase, last_action, next_action, blockers, metrics, last_updated
-                FROM project_status WHERE project_id = %s
-            """, (project_id,), fetchone=True)
-            if not rows:
-                send(user_id, f"❌ Progetto `{project_id}` non trovato.\nUsa /projects per la lista.")
-            else:
-                name, st, phase, last, nxt, blockers, metrics, updated = rows
-                emoji = {"active":"🟢","paused":"⏸️","error":"🔴","planning":"📋","completed":"✅"}.get(st,"⚪")
-                msg = f"{emoji} *{name}*\nStatus: {st.upper()}\n\n"
-                if phase: msg += f"📍 *Fase:* {phase}\n\n"
-                if last: msg += f"✅ *Ultimo step:*\n{last}\n\n"
-                if nxt: msg += f"▶️ *Prossimo:*\n{nxt}\n\n"
-                if blockers: msg += f"⚠️ *Blocchi:*\n{blockers}\n\n"
-                if metrics:
-                    msg += "📊 *Metriche:*\n"
-                    for k,v in metrics.items(): msg += f"  • {k}: {v}\n"
-                msg += f"\n🕐 _Aggiornato: {updated.strftime('%d/%m %H:%M')}_"
-                send(user_id, msg)
-        else:
-            # Overview tutti i progetti
-            rows = query_db("""
-                SELECT project_id, project_name, status, current_phase, last_updated
-                FROM project_status ORDER BY CASE status WHEN 'active' THEN 1 WHEN 'error' THEN 2 WHEN 'paused' THEN 3 ELSE 4 END
-            """, fetchall=True)
-            msg = f"📊 *Status Progetti*\n🕐 {now}\n\n"
-            for pid, pname, st, phase, upd in rows:
-                emoji = {"active":"🟢","paused":"⏸️","error":"🔴","planning":"📋","completed":"✅"}.get(st,"⚪")
-                msg += f"{emoji} *{pname}*\n"
-                if phase: msg += f"   ↳ {phase[:60]}\n"
-                msg += f"   🕐 {upd.strftime('%d/%m %H:%M')}\n\n"
-            msg += "💡 `/status [project-id]` per dettagli"
-            send(user_id, msg)
+        d = query_db("""
+            SELECT
+              (SELECT COUNT(*) FROM projects WHERE status='active') as active_projects,
+              (SELECT COUNT(*) FROM projects) as total_projects,
+              (SELECT COUNT(*) FROM workflows WHERE status='active') as active_workflows,
+              (SELECT COUNT(*) FROM execution_logs WHERE started_at>=CURRENT_DATE) as jobs_today,
+              (SELECT COUNT(*) FROM execution_logs WHERE started_at>=CURRENT_DATE AND status='success') as success_today,
+              (SELECT COUNT(*) FROM execution_logs WHERE started_at>=CURRENT_DATE AND status='error') as errors_today
+        """)
+        rate = round((d['success_today']/d['jobs_today'])*100) if d['jobs_today'] > 0 else 100
+        send(user_id, f"🖥️ *SYSTEM STATUS*\n🕐 {now}\n\n📦 *Progetti*\n✅ Attivi: {d['active_projects']}\n📊 Totali: {d['total_projects']}\n⚙️ Workflow attivi: {d['active_workflows']}\n\n🔄 *Esecuzioni Oggi*\n✅ Successi: {d['success_today']}\n❌ Errori: {d['errors_today']}\n📈 Success rate: {rate}%\n\n🟢 Sistema operativo")
 
     elif command == "/report":
         d = query_db("""
@@ -165,12 +129,8 @@ def handle(command, args, user_id):
         answer = ask_claude(question)
         send(user_id, f"🤖 *Claude risponde:*\n\n{answer}")
 
-    elif command == "/projects":
-        args = []
-        command = "/status"
-        return handle("/status", [], user_id)
     elif command == "/help":
-        send(user_id, "🤖 *SEMNMASTERBOT - COMANDI*\n\n📊 *Progetti*\n/status — Overview tutti i progetti\n/status beauty-salon-db — Beauty Salon DB\n/status ollama-lab — Ollama Lab\n/status crm-personale — CRM Personale\n/status personal-rag — Personal RAG\n/projects — Lista progetti\n\n📈 *Report*\n/report — Report completo\n/costs — Costi Claude API\n/ask <domanda> — Chiedi a Claude\n/help — Questo messaggio\n\n_Origin v1.0 — Adam_")
+        send(user_id, "🤖 *SEMNMASTERBOT - COMANDI*\n\n/status — Stato sistema in tempo reale\n/report — Report completo on-demand\n/costs — Costi Claude API del mese\n/ask <domanda> — Chiedi qualcosa a Claude\n/help — Questo messaggio\n\n_Agent System v2.0 — semn1_")
 
     else:
         send(user_id, f"❓ Comando non riconosciuto: {command}\n\nUsa /help per i comandi disponibili.")
@@ -198,7 +158,7 @@ def main():
                     raw = msg["text"].strip()
                     parts = raw.split(None, 1)
                     command = parts[0].lower().split("@")[0]
-                    args = parts[1].split() if len(parts) > 1 else []
+                    args = parts[1] if len(parts) > 1 else ""
                     handle(command, args, user_id)
         except Exception as e:
             print(f"Errore: {e}")
