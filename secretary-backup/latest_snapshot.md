@@ -49,3 +49,18 @@
 - La chat successiva di Adam deve leggere questo file e continuare
 - DB n8n: PostgreSQL (già configurato)
 - Tutte le credenziali in /home/semn1/origin/.env
+
+## PENDING TASKS — Da completare nella prossima sessione
+
+1. Importare workflow n8n "Project Status Sync" (JSON già pronto in cartella Windows)
+2. Scaricare JSON chat vecchia scraping → processarla → generare PROJECT_BOOTSTRAP.md per beauty-salon-db
+3. Aprire chat dedicata Beauty Salon DB e caricare bootstrap
+4. Verificare che /projects funzioni correttamente sul bot Telegram
+5. Aggiornare origin_backup.sh per includere sempre sezione PENDING
+
+## CONTESTO SESSIONE 12-13 Marzo
+- Rinominato agent-system → origin, agent-docs → beauty-salon-db
+- Fix critico bot Telegram: ExecStart puntava a file sbagliato
+- Tabella project_status creata e funzionante
+- /status e /status beauty-salon-db funzionanti su Telegram
+- PROJECT_BOOTSTRAP.md pubblicato su GitHub
